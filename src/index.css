@@ -1,0 +1,26 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.App {
+  background-image: url('./assets/cold.png');
+  background-size: cover;
+  background-position: bottom;
+  transition: 0.5 ease-out;
+}
+
+.App.warm {
+  background-image: url('./assets/hot.png');
+}
+
+main {
+  min-height: 100vh;
+}
+
+body {
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
