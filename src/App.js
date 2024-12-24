@@ -5,6 +5,7 @@ const api = {
 
 function App() {
 
+
   const dateBuilder = (d) => {
     let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -22,8 +23,14 @@ function App() {
         <div className = "search-box">
           <input type = "text" className = "search-bar" placeholder = "Hello" />
         </div>
-        <div className = "location-box"> Dubai, UAE </div>
-        <div className = "date"> {dateBuilder(new Date())} </div>
+        <div className = "location-box"> 
+          <div className = "location"> Dubai, UAE </div>
+          <div className = "date"> {dateBuilder(new Date())} </div>
+        </div>
+        <div className = "weather-box">
+          <div className = "temp"> 16*c </div>
+          <div className = "climate"> Sunny </div>
+        </div>
       </main>
     </div>
   );
