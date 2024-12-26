@@ -6,13 +6,29 @@ const api = {
 }
 
 function App() {
-  const [q, setq] = useState('');
-  const [weather, setweather] = useState ({});
+  const [query, setQuery] = useState('');
+  const [weather, setWeather] = useState({});
+  const [error, setError] = useState('');
+
   const search = evt => {
     if (evt.key === "Enter") {
-      fetch(`${api.base}weather?q=${q}&units=metric&APPID=${api.key}`)
-        .then(res => res.json())
-        .then(result => {setweather(result); setq(''); console.log(result); }); 
+      setError(''); 
+      fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
+        .then(res => {
+          if (!res.ok) {
+            throw new Error('Place not found');
+          }
+          return res.json();
+        })
+        .then(result => {
+          setWeather(result);
+          setQuery('');
+          console.log(result);
+        })
+        .catch(err => {
+          setError('Place not found. Please try another location.');
+          setWeather({});
+        });
     }
   }
 
@@ -23,23 +39,37 @@ function App() {
   }
 
   return (
-    <div className= {(typeof weather.main != "undefined") ? ((weather.main.temp > 16) ? 'App warm' : 'App') : 'App'}>
+    <div className={(typeof weather.main != "undefined") ? ((weather.main?.temp > 16) ? 'App warm' : 'App') : 'App'}>
       <main>
-        <div className = "search-box">
-          <input type = "text" className = "search-bar" placeholder = "Hello" onChange = {e => setq(e.target.value)} value = {q} onKeyPress = {search}/>
+        <div className="search-box">
+          <input
+            type="text"
+            className="search-bar"
+            placeholder="Search for a place..."
+            onChange={e => setQuery(e.target.value)}
+            value={query}
+            onKeyPress={search}
+          />
         </div>
-        {(typeof weather.main != 'undefined') ? (
-        <div>
-            <div className = "location-box"> 
-            <div className = "location"> {weather.name}, {weather.sys.country} </div>
-            <div className = "date"> {dateBuilder(new Date())} </div>
+
+        {error && (
+          <div className="error-message">
+            {error}
           </div>
-          <div className = "weather-box">
-            <div className = "temp"> {Math.round(weather.main.temp)}°c </div>
-            <div className = "climate"> {weather.weather[0].main} </div>
+        )}
+
+        {(typeof weather.main != 'undefined') && !error && (
+          <div>
+            <div className="location-box">
+              <div className="location">{weather.name}, {weather.sys.country}</div>
+              <div className="date">{dateBuilder(new Date())}</div>
+            </div>
+            <div className="weather-box">
+              <div className="temp">{Math.round(weather.main.temp)}°c</div>
+              <div className="climate">{weather.weather[0].main}</div>
+            </div>
           </div>
-        </div>
-        ) : ('')}
+        )}
       </main>
     </div>
   );
